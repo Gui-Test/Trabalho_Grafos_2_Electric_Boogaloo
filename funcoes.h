@@ -5,7 +5,13 @@
 
 int tamanhotxt();
 void letxt(int tam, char *palavra[tam]);
-
+void criaArqGrafo(int tam, int mat_adja[][tam]);
+void montarMatriz(int tam, int mat_adja[][tam], char *palavra[tam]);
+int comparaPalavra(char palavra1[], char palavra2[]);
+void zeraMatriz(int tam, int mat[tam][tam]);
+void zeraArray(int tam, int array[tam]);
+int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam]);
+int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes);
 
 
 int tamanhotxt(){ 
@@ -39,11 +45,127 @@ void letxt(int tam, char *palavra[tam]){
     }
 
     for(int i=0;i<tam;i++){
-        fgets(linha,100,f);
-        printf("%s\n", linha);
-        strcpy(palavra[i],linha);
-        printf("%s\n", palavra[i]);
+        for (int i = 0; i < tam; i++) {
+            if (fgets(linha, sizeof(linha), f) == NULL) {
+                break;
+            }
+
+            linha[strcspn(linha, "\r\n")] = '\0';
+
+            strcpy(palavra[i], linha);
+        }
     }
 
     fclose(f);
 }
+
+void criaArqGrafo(int tam, int mat_adja[][tam]){
+    FILE *f = fopen("grafo.csv", "w");
+
+    if(f == NULL){
+        printf("Csv de grafo não criado");
+        return;
+    }
+    
+    for(int i=1;i<=tam;i++){
+        fprintf(f,"%i,", i); 
+    }
+    fprintf(f, "\n");
+
+    for (int i = 0; i < tam; i++) {
+        fprintf(f, "%d", i);
+
+        for (int j = 0; j < tam; j++) {
+           
+            fprintf(f, ";%i", mat_adja[i][j]);
+            //if(mat_adja[i][j] ==1) printf("linha: %i", j);
+        }
+
+        fprintf(f, "\n");
+    }
+    fclose(f);
+}
+
+int comparaPalavra(char palavra1[], char palavra2[]) {
+    int diferentes = 0;
+
+    for (int i = 0; i < 4; i++) {
+        if (tolower((unsigned char)palavra1[i]) !=
+            tolower((unsigned char)palavra2[i])) {
+            diferentes++;
+        }
+    }
+
+    return diferentes == 1;
+}
+
+void montarMatriz(int tam, int mat_adja[][tam], char *palavra[tam]){
+    for(int i=0; i<tam ; i++){
+        for(int j= i; j<tam ; j++){ 
+            if(i != j){
+                int result = comparaPalavra(palavra[i], palavra[j]);
+                if(result != 0 && result != 1) printf("linha: %i", j);
+                mat_adja[i][j] = result;
+                mat_adja[j][i] = result;
+                //fprintf(f,"%i %i\n",flor[i].numVert,flor[j].numVert);
+            }else{
+                mat_adja[i][j] = 0;
+            } 
+        }
+    }
+}
+
+void zeraMatriz(int tam, int mat[tam][tam]){
+    for(int i=0; i<tam ; i++){
+        for(int j=0; j<tam ; j++){
+            mat[i][j] = 0;
+        }
+    }
+}
+
+void zeraArray(int tam, int array[tam]){
+    for(int i=0; i<tam ; i++){
+       array[i] = 0;    
+    }
+}
+
+
+int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam]) {
+    visitado[v] = 1;
+    int tamanho = 1;
+
+    for (int u = 0; u < tam; u++) {
+        if (mat_adja[v][u] == 1 && !visitado[u]) {
+            tamanho += dfs(u, tam, mat_adja, visitado);
+        }
+    }
+
+    return tamanho;
+}
+
+int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes) {
+    
+    for (int i = 0; i < tam; i++) {
+        printf("%i ",visitado[i]) ;
+           
+    }
+
+    for (int i = 0; i < tam; i++) {
+        if (!visitado[i]) {
+            tamanhos[*qtd_componentes] = dfs(i, tam, mat_adja, visitado);
+            (*qtd_componentes)++;
+        }
+    }
+
+    printf("Quantidade de componentes: %d\n",
+           *qtd_componentes);
+
+    for (int i = 0; i < *qtd_componentes; i++) {
+        printf("Componente %d: %d vertices\n",
+               i + 1, tamanhos[i]);
+    }
+
+    return 0;
+}
+
+
