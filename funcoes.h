@@ -208,7 +208,6 @@ int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[ta
 
 int encontra_palavra(char *pal,int tam,char *palavras[tam]){
     int i = 0;
-    printf("%s\n", pal);
     for(int i = 0;i<tam;i++){
         if(compara_igual(pal,palavras[i])==1){
             return i;
@@ -229,6 +228,10 @@ int compara_igual(char *palavra1, char palavra2[]) {
     }
 
     return 1;
+}
+
+void dijkstra(int tam, int mat_adja[][tam], int startnode){
+    
 }
 
 
