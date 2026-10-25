@@ -15,7 +15,8 @@ int main(){
     int tamanhos[tam];
     int qtd_componentes = 0;
     int visitado[tam];
-
+    MaiorGrau *listaMaiorGrau = NULL;
+    MenorGrau *listaMenorGrau = NULL;
     zeraArray(tam, tamanhos);
     zeraArray(tam, visitado);
 
@@ -25,7 +26,7 @@ int main(){
         printf("Erro ao alocar memoria\n");
         return 1;
     }
-    printf("3232");
+    
     printf("tam:%i\n", tam);
     char *palavras[tam];
 
@@ -34,12 +35,12 @@ int main(){
     }
 
     letxt(tam,palavras);
-    printf("1");
+    
     montarMatriz(tam,mat_adja, palavras);
-    printf("2");
+    
     criaArqGrafo(tam, mat_adja);
-    printf("3");
-    componentes(tam, mat_adja, visitado, tamanhos, &qtd_componentes);
+    
+    componentes(tam, mat_adja, visitado, tamanhos, &qtd_componentes, listaMaiorGrau, listaMenorGrau, palavras);
 
     char *pal1 = malloc(sizeof(char)*4);
     char *pal2 = malloc(sizeof(char)*4);
@@ -59,6 +60,6 @@ int main(){
     for (int i = 0; i < tam; i++) {
         free(palavras[i]);
     }
-   free(mat_adja);
+   //free(mat_adja);
 }
 

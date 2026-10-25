@@ -4,6 +4,17 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+
+typedef struct maiorComponente{
+    int grau;
+    int palavraLoc;
+}MaiorGrau;
+
+typedef struct menorComponente{
+    int grau;
+    int palavraLoc;
+}MenorGrau;
+
 int tamanhotxt();
 void letxt(int tam, char *palavra[tam]);
 void criaArqGrafo(int tam, int mat_adja[][tam]);
@@ -11,10 +22,11 @@ void montarMatriz(int tam, int mat_adja[][tam], char *palavra[tam]);
 int comparaPalavra(char palavra1[], char palavra2[]);
 void zeraMatriz(int tam, int mat[tam][tam]);
 void zeraArray(int tam, int array[tam]);
-int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam]);
-int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes);
+int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam], int locGrau, MaiorGrau *ListaMaiorGrau, MenorGrau *ListaMenorGrau);
+int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes, MaiorGrau *listaMaiorGrau, MenorGrau *listaMenorGrau, char *palavras[tam]);
 int encontra_palavra(char pal[],int tam,char *palavras[tam]);
 int compara_igual(char palavra1[], char palavra2[]);
+
 
 
 int tamanhotxt(){ 
@@ -133,29 +145,51 @@ void zeraArray(int tam, int array[tam]){
 }
 
 
-int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam]) {
+int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam], int locGrau, MaiorGrau *listaMaiorGrau, MenorGrau *listaMenorGrau) {
     visitado[v] = 1;
     int tamanho = 1;
+    int grau = 0;
+    int grauVisitados = 0;
 
     for (int u = 0; u < tam; u++) {
         if (mat_adja[v][u] == 1 && !visitado[u]) {
-            tamanho += dfs(u, tam, mat_adja, visitado);
+            tamanho += dfs(u, tam, mat_adja, visitado, locGrau, listaMaiorGrau, listaMenorGrau);
+            grauVisitados++;
+        }
+        if (mat_adja[v][u] == 1)
+            grau++;
+    }
+    if(grau >= listaMaiorGrau[locGrau].grau){
+        listaMaiorGrau[locGrau].grau = grau;
+        listaMaiorGrau[locGrau].palavraLoc = v;
+    }
+    if(grauVisitados == 0){
+        listaMenorGrau[locGrau].grau = grau;
+        listaMenorGrau[locGrau].palavraLoc = v;
+    }else{
+        if(grau <= listaMenorGrau[locGrau].grau){
+            listaMenorGrau[locGrau].grau = grau;
+            listaMenorGrau[locGrau].palavraLoc = v;
         }
     }
 
     return tamanho;
 }
 
-int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes) {
-    
-    for (int i = 0; i < tam; i++) {
+int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes, MaiorGrau *listaMaiorGrau, MenorGrau *listaMenorGrau, char *palavras[tam]) {
+
+    /*for (int i = 0; i < tam; i++) {
         printf("%i ",visitado[i]) ;
            
-    }
+    }*/
 
     for (int i = 0; i < tam; i++) {
         if (!visitado[i]) {
-            tamanhos[*qtd_componentes] = dfs(i, tam, mat_adja, visitado);
+            listaMaiorGrau = realloc(listaMaiorGrau, (*qtd_componentes +1) * sizeof(MaiorGrau));
+            listaMaiorGrau[*qtd_componentes] = (MaiorGrau){0};
+            listaMenorGrau = realloc(listaMenorGrau, (*qtd_componentes +1) * sizeof(MenorGrau));
+            listaMenorGrau[*qtd_componentes] = (MenorGrau){0};
+            tamanhos[*qtd_componentes] = dfs(i, tam, mat_adja, visitado, *qtd_componentes, listaMaiorGrau, listaMenorGrau);
             (*qtd_componentes)++;
         }
     }
@@ -164,8 +198,9 @@ int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[ta
            *qtd_componentes);
 
     for (int i = 0; i < *qtd_componentes; i++) {
-        printf("Componente %d: %d vertices\n",
-               i + 1, tamanhos[i]);
+        printf("Componente %d: %d vertices - \n", i + 1, tamanhos[i]);
+        printf("Palavra maior grau: %s - Grau: %i ", palavras[listaMaiorGrau[i].palavraLoc], listaMaiorGrau[i].grau);   
+        printf("Palavra menor grau: %s - Grau: %i \n", palavras[listaMenorGrau[i].palavraLoc], listaMenorGrau[i].grau);   
     }
 
     return 0;
