@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-//#include "funcoes.h"
+#include "funcoes.h"
 
 
 
@@ -30,7 +30,7 @@ int main(){
     char *palavras[tam];
 
     for (int i = 0; i < tam; i++) {
-        palavras[i] = malloc(sizeof(char)*5);
+        palavras[i] = malloc(sizeof(char)*4);
     }
 
     letxt(tam,palavras);
@@ -41,9 +41,21 @@ int main(){
     printf("3");
     componentes(tam, mat_adja, visitado, tamanhos, &qtd_componentes);
 
-    for (int i = 0; i < tam; i++)
+    char *pal1 = malloc(sizeof(char)*4);
+    char *pal2 = malloc(sizeof(char)*4);
+
+    printf("\nDigite uma palavra de 4 caracteres:\n");
+    scanf("%s", pal1);
+    printf("\nDigite outra palavra de 4 caracteres:\n");
+    scanf("%s", pal2);
+
+    int lol = encontra_palavra(pal1 ,tam, palavras);
+    printf("\n%i", lol);
+    printf("\n%s", palavras[lol]);
+
+    //for (int i = 0; i < tam; i++)
         //printf("%d", mat_adja[0][i]);
-        
+         
     for (int i = 0; i < tam; i++) {
         free(palavras[i]);
     }

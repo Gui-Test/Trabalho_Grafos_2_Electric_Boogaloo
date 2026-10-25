@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 int tamanhotxt();
 void letxt(int tam, char *palavra[tam]);
@@ -12,6 +13,8 @@ void zeraMatriz(int tam, int mat[tam][tam]);
 void zeraArray(int tam, int array[tam]);
 int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam]);
 int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes);
+int encontra_palavra(char pal[],int tam,char *palavras[tam]);
+int compara_igual(char palavra1[], char palavra2[]);
 
 
 int tamanhotxt(){ 
@@ -167,5 +170,31 @@ int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[ta
 
     return 0;
 }
+
+int encontra_palavra(char *pal,int tam,char *palavras[tam]){
+    int i = 0;
+    printf("%s\n", pal);
+    for(int i = 0;i<tam;i++){
+        if(compara_igual(pal,palavras[i])==1){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int compara_igual(char *palavra1, char palavra2[]) {
+    
+
+    for (int i = 0; i < 4; i++) {
+        
+        if (tolower(palavra1[i]) != 
+        tolower(palavra2[i])) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 
 
