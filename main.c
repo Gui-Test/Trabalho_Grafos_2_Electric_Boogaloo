@@ -53,7 +53,7 @@ int main(){
     int ind_pal1 = encontra_palavra(pal1 ,tam, palavras);
     int ind_pal2 = encontra_palavra(pal2 ,tam, palavras);
 
-    printf("\n\nrelacao direta matriz: %i", mat_adja[ind_pal1][ind_pal2]);
+    printf("\n\nrelacao direta matriz[%i][%i]: %i",ind_pal1,ind_pal2, mat_adja[ind_pal1][ind_pal2]);
 
     dijkstra(tam,mat_adja,ind_pal1,ind_pal2);
     

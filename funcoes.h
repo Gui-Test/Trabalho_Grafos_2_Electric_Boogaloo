@@ -266,8 +266,7 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal){
     }
 
     //printSolution(dist,tam);
-    printf("\n[%i] : %i", startnode, dist[startnode]);
-    printf("\n[%i] : %i", endgoal, dist[endgoal]);
+    printf("\ndistancia de [%i] ate [%i] : %i", startnode, endgoal, dist[endgoal]);
 
 }
 
