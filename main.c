@@ -55,7 +55,7 @@ int main(){
 
     printf("\n\nrelacao direta matriz[%i][%i]: %i",ind_pal1,ind_pal2, mat_adja[ind_pal1][ind_pal2]);
 
-    dijkstra(tam,mat_adja,ind_pal1,ind_pal2);
+    dijkstra(tam,mat_adja,ind_pal1,ind_pal2,palavras);
     
 
     //for (int i = 0; i < tam; i++)
