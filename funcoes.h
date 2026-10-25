@@ -257,7 +257,7 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal){
         included[u] = 1;
 
         for (int j = 0; j < tam; j++) {
-            if (!included[j] && mat_adja[i][j] 
+            if (!included[j] && mat_adja[u][j] 
                 && dist[u] != INFINITE
                 && dist[u] + mat_adja[u][j] < dist[j]) {
                 dist[j] = dist[u] + mat_adja[u][j];
@@ -268,7 +268,6 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal){
     //printSolution(dist,tam);
     printf("\n[%i] : %i", startnode, dist[startnode]);
     printf("\n[%i] : %i", endgoal, dist[endgoal]);
-    printf("\nteste : %i", startnode, included[startnode]);
 
 }
 
