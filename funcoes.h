@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#define INFINITE 9999
 
 
 typedef struct maiorComponente{
@@ -206,6 +207,9 @@ int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[ta
     return 0;
 }
 
+// Funções com relação ao Djinktras
+int findminDistance(int dist[], int included[], int tam);
+
 int encontra_palavra(char *pal,int tam,char *palavras[tam]){
     int i = 0;
     for(int i = 0;i<tam;i++){
@@ -230,9 +234,53 @@ int compara_igual(char *palavra1, char palavra2[]) {
     return 1;
 }
 
-void dijkstra(int tam, int mat_adja[][tam], int startnode){
-    
+void printSolution(int dist[],int tam){
+    printf("Vertex \t Distance from Source\n");
+    for (int i = 0; i < tam; i++) {
+        printf("%d \t\t %d\n", i, dist[i]);
+    }
 }
 
+void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal){
+    int dist[tam];
+    int included[tam];
 
+    for (int i = 0; i < tam; i++) {
+        dist[i] = INFINITE;
+        included[i] = 0;
+    }
+
+    dist[startnode] = 0;
+
+    for (int i = 0; i < tam - 1; i++) {
+        int u = findminDistance(dist, included, tam);
+        included[u] = 1;
+
+        for (int j = 0; j < tam; j++) {
+            if (!included[j] && mat_adja[i][j] 
+                && dist[u] != INFINITE
+                && dist[u] + mat_adja[u][j] < dist[j]) {
+                dist[j] = dist[u] + mat_adja[u][j];
+            }
+        }
+    }
+
+    //printSolution(dist,tam);
+    printf("\n[%i] : %i", startnode, dist[startnode]);
+    printf("\n[%i] : %i", endgoal, dist[endgoal]);
+    printf("\nteste : %i", startnode, included[startnode]);
+
+}
+
+int findminDistance(int dist[], int included[], int tam){
+    int min = INFINITE, min_index;
+
+    for (int v = 0; v < tam; v++) {
+        if (included[v] == 0 && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+    return min_index;
+}
 
