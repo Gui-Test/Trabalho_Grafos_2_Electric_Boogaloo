@@ -253,6 +253,7 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal,char *pal
     }
 
     dist[startnode] = 0;
+    lastvisit[startnode] = -1;
 
     for (int i = 0; i < tam - 1; i++) {
         int u = findminDistance(dist, included, tam);
@@ -270,7 +271,14 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal,char *pal
 
     //printSolution(dist,tam);
     printf("\ndistancia de [%i] ate [%i] : %i", startnode, endgoal, dist[endgoal]);
-    printf("\nultimavisita: %i",lastvisit[endgoal]);
+    printf("\nultimavisita: %i\n",lastvisit[endgoal]);
+
+    int vertic = endgoal;
+    while(vertic != startnode){
+        printf("%s -> ", palavras[vertic]);
+        vertic = lastvisit[vertic];
+    }
+    printf("%s", palavras[vertic]);
 }
 
 int findminDistance(int dist[], int included[], int tam){
