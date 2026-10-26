@@ -27,6 +27,9 @@ int dfs(int v,int tam, int mat_adja[][tam], int visitado[tam], int locGrau, Maio
 int componentes(int tam, int mat_adja[][tam], int visitado[tam], int tamanhos[tam], int *qtd_componentes, MaiorGrau *listaMaiorGrau, MenorGrau *listaMenorGrau, char *palavras[tam]);
 int encontra_palavra(char pal[],int tam,char *palavras[tam]);
 int compara_igual(char palavra1[], char palavra2[]);
+void printSolution(int dist[],int tam);
+void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal,char *palavras[tam]);
+int findminDistance(int dist[], int included[], int tam);
 
 
 
@@ -270,15 +273,18 @@ void dijkstra(int tam, int mat_adja[][tam], int startnode, int endgoal,char *pal
     }
 
     //printSolution(dist,tam);
-    printf("\ndistancia de [%i] ate [%i] : %i", startnode, endgoal, dist[endgoal]);
+    printf("\ndistancia de [%i] ate [%i] : %i", endgoal, startnode, dist[endgoal]);
     printf("\nultimavisita: %i\n",lastvisit[endgoal]);
-
+    if(dist[endgoal]!=INFINITE){
     int vertic = endgoal;
-    while(vertic != startnode){
-        printf("%s -> ", palavras[vertic]);
-        vertic = lastvisit[vertic];
+        while(vertic != startnode){
+            printf("%s -> ", palavras[vertic]);
+            vertic = lastvisit[vertic];
+        }
+        printf("%s", palavras[vertic]);
+    }else{
+        printf("Nao foi possível encontrar relacoes");
     }
-    printf("%s", palavras[vertic]);
 }
 
 int findminDistance(int dist[], int included[], int tam){
